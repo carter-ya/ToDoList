@@ -41,6 +41,7 @@ CREATE TABLE t_task (
   title VARCHAR(255) NOT NULL COMMENT '任务标题',
   priority TINYINT UNSIGNED NOT NULL DEFAULT '5' COMMENT '任务优先级，从低到高1-10',
   comment_location VARCHAR(255) NOT NULL DEFAULT '' COMMENT '注释文件位置',
+  empty BOOL NOT NULL DEFAULT TRUE COMMENT '是否包含子任务',
   started_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务开始时间',
   ended_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务截止时间',
   state TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '任务状态 1 new 新建 2 progress 进行中 2 finished 完成 3 deleted 删除',

@@ -16,6 +16,8 @@ public class TaskResponse {
   private Long createdAt;
   @ApiModelProperty("任务截止时间")
   private Long endedAt;
+  @ApiModelProperty("是否包含子任务")
+  private Boolean empty;
   @ApiModelProperty("任务编号")
   private Long id;
   @ApiModelProperty("父任务编号")

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,7 +29,6 @@ public class ProjectController {
   private ProjectService projectService;
 
   @PostMapping("/")
-  @ResponseBody
   @ApiOperation("新建项目")
   public ApiResponse<ProjectResponse> newProject(@Valid @RequestBody NewProjectRequest request) {
     return ApiResponse.ok(
@@ -38,14 +36,12 @@ public class ProjectController {
   }
 
   @GetMapping("/")
-  @ResponseBody
   @ApiOperation("获取所有项目")
   public ApiResponse<List<ProjectResponse>> findProjects() {
     return ApiResponse.ok(projectService.findProjectsByUserId(GatewayContext.getCurrentUserId()));
   }
 
   @PostMapping("/{projectId:\\d{1,19}}/rename")
-  @ResponseBody
   @ApiOperation("项目重命名")
   public ApiResponse<Void> renameProject(@Valid @RequestBody RenameProjectRequest request,
       @PathVariable("projectId") Long projectId) {
@@ -54,7 +50,6 @@ public class ProjectController {
   }
 
   @PostMapping("/{projectId:\\d{1,19}}/delete")
-  @ResponseBody
   @ApiOperation("删除项目")
   public ApiResponse<Void> deleteProject(@PathVariable("projectId") Long projectId) {
     projectService.deleteProject(GatewayContext.getCurrentUserId(), projectId);

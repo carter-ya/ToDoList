@@ -66,7 +66,7 @@ public class ProjectService {
     LOGGER.info("项目 {} 删除成功", project);
   }
 
-  private Project findProject(Long projectId, Long userId) {
+  public Project findProject(Long projectId, Long userId) {
     return Optional.ofNullable(projectRepository.findByIdAndUserId(projectId, userId))
         .orElseThrow(() -> new ApiException(GatewayError.PROJECT_NOT_FOUND, projectId, userId));
   }
