@@ -59,8 +59,8 @@ public class TaskService {
     if (!task.getParentId().equals(0L)) {
       // 检查是否有父任务
       parentTask = taskRepository.findOne(task.getParentId());
-      // 检查父任务是否需要更新
-      if (taskRepository.countByParentId(task.getParentId()) == 0) {
+      // 检查父任务是否需要更新->当前父任务的下级只有一个任务了（也就是要被删除的任务）
+      if (taskRepository.countByParentId(task.getParentId()) == 1) {
         parentTask.setEmpty(Boolean.TRUE);
       }
     }

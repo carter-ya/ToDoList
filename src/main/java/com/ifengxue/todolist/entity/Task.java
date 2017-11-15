@@ -41,7 +41,7 @@ public class Task extends AbstractEntity<Long> {
   private String commentLocation = "";
   @Column(nullable = false)
   @Builder.Default
-  private Boolean empty = Boolean.FALSE;
+  private Boolean empty = Boolean.TRUE;
   @Column(nullable = false)
   @Builder.Default
   private Long startedAt = 0L;
