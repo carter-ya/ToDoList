@@ -1,0 +1,52 @@
+DROP TABLE IF EXISTS t_user;
+CREATE TABLE t_user (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',
+  version BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '数据版本',
+  nickname VARCHAR(15) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  phone CHAR(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  email VARCHAR(255) NOT NULL DEFAULT '' COMMENT '邮箱',
+  password VARCHAR(128) NOT NULL DEFAULT '' COMMENT '密码',
+  salt CHAR(16) NOT NULL DEFAULT '' COMMENT '盐',
+  icon VARCHAR(255) NOT NULL DEFAULT '' COMMENT '头像',
+  state TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '用户状态 1 valid 有效 2 frozen 冻结',
+  created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
+  updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (id),
+  UNIQUE unique_phone (phone) COMMENT '手机号索引',
+  UNIQUE unique_email (email) COMMENT '邮箱索引'
+)ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '用户表';
+
+DROP TABLE IF EXISTS t_project;
+CREATE TABLE t_project (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',
+  version BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '数据版本',
+  user_id BIGINT UNSIGNED NOT NULL COMMENT '所属用户ID',
+  name VARCHAR(255) NOT NULL COMMENT '项目名称',
+  total_task BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务总数量',
+  total_finished_task BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '已完成任务总数量',
+  state TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态 1 valid 有效 2 deleted 删除',
+  created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
+  updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (id),
+  INDEX idx_user_id_state (user_id, state)
+)ENGINE=InnoDB DEFAULT CHARSET utf8mb4 COMMENT '任务项目表';
+
+DROP TABLE IF EXISTS t_task;
+CREATE TABLE t_task (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',
+  version BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '数据版本',
+  user_id BIGINT UNSIGNED NOT NULL COMMENT '所属用户ID',
+  project_id BIGINT UNSIGNED NOT NULL COMMENT '项目ID',
+  parent_id BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务ID',
+  title VARCHAR(255) NOT NULL COMMENT '任务标题',
+  priority TINYINT UNSIGNED NOT NULL DEFAULT '5' COMMENT '任务优先级，从低到高1-10',
+  comment_location VARCHAR(255) NOT NULL DEFAULT '' COMMENT '注释文件位置',
+  started_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务开始时间',
+  ended_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务截止时间',
+  state TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '任务状态 1 new 新建 2 progress 进行中 2 finished 完成 3 deleted 删除',
+  created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
+  updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (id),
+  INDEX idx_project_id (project_id),
+  INDEX idx_user_id_state (user_id,state)
+)ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '任务详情表';

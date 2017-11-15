@@ -1,0 +1,2 @@
+INSERT INTO t_user (id, nickname,phone,email,password,salt,created_at,updated_at) VALUES
+  (1, "疯雪ing", "13466715801", "liukefeng2008@hotmail.com", "nopassword", "nosalt", 1510478558472, 1510478558472);
