@@ -44,6 +44,7 @@ CREATE TABLE t_task (
   empty BOOL NOT NULL DEFAULT TRUE COMMENT '是否包含子任务',
   started_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务开始时间',
   ended_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务截止时间',
+  finished_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务完成时间',
   state TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '任务状态 1 new 新建 2 progress 进行中 2 finished 完成 3 deleted 删除',
   created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
   updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',

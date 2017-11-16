@@ -4,16 +4,18 @@ import com.ifengxue.base.rest.ApiException;
 import java.util.Arrays;
 
 public enum TaskState {
-  NEW(1, "new"),
-  PROGRESS(2, "progress"),
-  FINISHED(3, "finished"),
-  DELETED(4, "deleted");
+  NEW(1, "new", "新建"),
+  PROGRESS(2, "progress", "进行中"),
+  FINISHED(3, "finished", "已完成"),
+  DELETED(4, "deleted", "已删除");
   private final Integer code;
   private final String value;
+  private final String cnValue;
 
-  TaskState(Integer code, String value) {
+  TaskState(Integer code, String value, String cnValue) {
     this.code = code;
     this.value = value;
+    this.cnValue = cnValue;
   }
 
   public Integer getCode() {
@@ -22,6 +24,10 @@ public enum TaskState {
 
   public String getValue() {
     return value;
+  }
+
+  public String getCnValue() {
+    return cnValue;
   }
 
   public static TaskState find(Integer code) {

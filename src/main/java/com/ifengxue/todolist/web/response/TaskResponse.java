@@ -1,6 +1,7 @@
 package com.ifengxue.todolist.web.response;
 
 import com.ifengxue.todolist.entity.Task;
+import com.ifengxue.todolist.enums.TaskState;
 import com.ifengxue.todolist.util.BeanUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,8 +31,12 @@ public class TaskResponse {
   private Long startedAt;
   @ApiModelProperty("任务标题")
   private String title;
+  @ApiModelProperty("任务状态")
+  private String state;
 
   public static TaskResponse from(Task task) {
-    return BeanUtil.copyProperties(task, TaskResponse.class);
+    TaskResponse response = BeanUtil.copyProperties(task, TaskResponse.class, "state");
+    response.setState(TaskState.find(task.getState()).getCnValue());
+    return response;
   }
 }

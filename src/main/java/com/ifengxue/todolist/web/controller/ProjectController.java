@@ -41,6 +41,13 @@ public class ProjectController {
     return ApiResponse.ok(projectService.findProjectsByUserId(GatewayContext.getCurrentUserId()));
   }
 
+  @GetMapping("/{projectId:\\d{1,19}}")
+  @ApiOperation("获取项目信息")
+  public ApiResponse<ProjectResponse> findProject(@PathVariable("projectId") Long projectId) {
+    return ApiResponse.ok(ProjectResponse
+        .from(projectService.findProject(projectId, GatewayContext.getCurrentUserId())));
+  }
+
   @PostMapping("/{projectId:\\d{1,19}}/rename")
   @ApiOperation("项目重命名")
   public ApiResponse<Void> renameProject(@Valid @RequestBody RenameProjectRequest request,

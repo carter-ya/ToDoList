@@ -11,6 +11,7 @@ import com.ifengxue.todolist.repository.TaskRepository;
 import com.ifengxue.todolist.service.transaction.TaskTransaction;
 import com.ifengxue.todolist.util.ProjectUtil;
 import com.ifengxue.todolist.web.request.NewTaskRequest;
+import com.ifengxue.todolist.web.request.RenameTaskRequest;
 import com.ifengxue.todolist.web.response.TaskResponse;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,111 @@ public class TaskService {
     taskTransaction.save(project, task, parentTask);
     LOGGER.info("用户 {} 创建任务成功，任务ID {}", userId, task.getId());
     return TaskResponse.from(task);
+  }
+
+  /**
+   * 任务重命名
+   */
+  public void renameTask(Long userId, Long projectId, Long parentId, Long taskId,
+      RenameTaskRequest request) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    if (task.getTitle().equals(request.getName())) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    task.setTitle(request.getName());
+    taskRepository.save(task);
+    LOGGER.info("用户 {} 重命名任务 {} 为 {} 成功", userId, taskId, request.getName());
+  }
+
+  /**
+   * 设置任务优先级
+   */
+  public void setPriority(Long userId, Long projectId, Long parentId, Long taskID, int priority) {
+    Task task = findTask(userId, projectId, parentId, taskID);
+    if (task.getPriority().equals(priority)) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    task.setPriority(priority);
+    taskRepository.save(task);
+    LOGGER.info("用户 {} 设置任务 {} 优先级为 {} 成功", userId, taskID, priority);
+  }
+
+  /**
+   * 设置任务开始时间
+   */
+  public void setStartedAt(Long userId, Long projectId, Long parentId, Long taskId,
+      long startedAt) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    if (task.getStartedAt().equals(startedAt) && startedAt != 0) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    if (startedAt > 0 && !task.getEndedAt().equals(0L) && startedAt > task.getEndedAt()) {
+      throw new ApiException(GatewayError.START_TIME_GREATER_END_TIME);
+    }
+    task.setStartedAt(startedAt);
+    taskRepository.save(task);
+    LOGGER.info("用户 {} 设置任务 {} 开始时间为 {} 成功", userId, taskId, startedAt);
+  }
+
+  /**
+   * 设置任务截止时间
+   */
+  public void setEndedAt(Long userId, Long projectId, Long parentId, Long taskId, Long endedAt) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    if (task.getEndedAt().equals(endedAt) && endedAt != 0) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    if (endedAt > 0 && !task.getEndedAt().equals(0L) && endedAt < task.getStartedAt()) {
+      throw new ApiException(GatewayError.START_TIME_GREATER_END_TIME);
+    }
+    task.setEndedAt(endedAt);
+    taskRepository.save(task);
+    LOGGER.info("用户 {} 设置任务 {} 结束时间为 {} 成功", userId, taskId, endedAt);
+  }
+
+  /**
+   * 开始任务
+   */
+  public void startTask(Long userId, Long projectId, Long parentId, Long taskId) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    if (TaskState.PROGRESS.getCode().equals(task.getState())) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    // 检查是否有必要更新已完成任务数量
+    Project project = null;
+    if (TaskState.FINISHED.getCode().equals(task.getState())) {
+      project = projectService.findProject(projectId, userId);
+      ProjectUtil.decreTotalFinishedTask(project);
+    }
+    long now = System.currentTimeMillis();
+    task.setStartedAt(now);
+    task.setFinishedAt(0L);
+    if (!task.getEndedAt().equals(0L) && task.getEndedAt() < now) {
+      task.setEndedAt(0L);
+    }
+    if (project == null) {
+      taskRepository.save(task);
+    } else {
+      taskTransaction.save(project, task, null);
+    }
+    LOGGER.info("用户 {} 开始任务 {} 成功", userId, taskId);
+  }
+
+  /**
+   * 完成任务
+   */
+  public void finishTask(Long userId, Long projectId, Long parentId, Long taskId) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    if (TaskState.FINISHED.getCode().equals(task.getState())) {
+      throw new ApiException(GatewayError.DATA_ERROR);
+    }
+    long now = System.currentTimeMillis();
+    task.setFinishedAt(now);
+    task.setState(TaskState.FINISHED.getCode());
+    Project project = projectService.findProject(projectId, userId);
+    ProjectUtil.increTotalFinishedTask(project);
+    taskTransaction.save(project, task, null);
+    LOGGER.info("用户 {} 完成任务 {} 成功", userId, taskId);
   }
 
   /**

@@ -1,7 +1,6 @@
 package com.ifengxue.todolist.entity;
 
 import com.ifengxue.base.entity.AbstractEntity;
-import com.ifengxue.todolist.enums.TaskPriority;
 import com.ifengxue.todolist.enums.TaskState;
 import com.ifengxue.todolist.web.request.NewTaskRequest;
 import javax.persistence.Column;
@@ -35,7 +34,7 @@ public class Task extends AbstractEntity<Long> {
   private String title = "";
   @Column(nullable = false)
   @Builder.Default
-  private Integer priority = TaskPriority.LEVEL_FIVE.getCode();
+  private Integer priority = 5;
   @Column(nullable = false)
   @Builder.Default
   private String commentLocation = "";
@@ -48,6 +47,9 @@ public class Task extends AbstractEntity<Long> {
   @Column(nullable = false)
   @Builder.Default
   private Long endedAt = 0L;
+  @Column(nullable = false)
+  @Builder.Default
+  private Long finishedAt = 0L;
   @Column(nullable = false)
   @Builder.Default
   private Integer state = TaskState.NEW.getCode();

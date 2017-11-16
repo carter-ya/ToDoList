@@ -4,7 +4,8 @@ import com.ifengxue.base.rest.Error;
 
 public enum ValidationError implements Error {
   INVALID_NAME("invalid name", "无效的名称"),
-  INVALID_ID("invalid id", "无效的ID");
+  INVALID_ID("invalid id", "无效的ID"),
+  INVALID_DATE("invalid date", "无效的日期");
   private final String code;
   private final String value;
 

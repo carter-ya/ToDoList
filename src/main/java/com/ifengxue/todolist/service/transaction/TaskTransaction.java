@@ -20,6 +20,9 @@ public class TaskTransaction {
   @Autowired
   private TaskRepository taskRepository;
 
+  /**
+   * @param parentTask 父任务如果为null，则不保存
+   */
   @Transactional
   public void save(Project project, Task task, Task parentTask) {
     projectRepository.save(project);
