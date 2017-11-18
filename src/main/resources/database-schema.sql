@@ -40,7 +40,6 @@ CREATE TABLE t_task (
   parent_id BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务ID',
   title VARCHAR(255) NOT NULL COMMENT '任务标题',
   priority TINYINT UNSIGNED NOT NULL DEFAULT '5' COMMENT '任务优先级，从低到高1-10',
-  comment_location VARCHAR(255) NOT NULL DEFAULT '' COMMENT '注释文件位置',
   empty BOOL NOT NULL DEFAULT TRUE COMMENT '是否包含子任务',
   started_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务开始时间',
   ended_at BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '任务截止时间',
@@ -52,3 +51,15 @@ CREATE TABLE t_task (
   INDEX idx_project_id (project_id),
   INDEX idx_user_id_state (user_id,state)
 )ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '任务详情表';
+
+DROP TABLE IF EXISTS t_task_comment;
+CREATE TABLE t_task_comment (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',
+  version BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '数据版本',
+  task_id BIGINT UNSIGNED NOT NULL COMMENT '任务ID',
+  content MEDIUMTEXT NOT NULL COMMENT '内容',
+  created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
+  updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (id),
+  INDEX idx_project_id (task_id)
+)ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '任务备注表';

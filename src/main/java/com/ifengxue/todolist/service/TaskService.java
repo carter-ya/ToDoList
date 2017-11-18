@@ -5,14 +5,20 @@ import static java.util.stream.Collectors.toList;
 import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.entity.Project;
 import com.ifengxue.todolist.entity.Task;
+import com.ifengxue.todolist.entity.TaskComment;
+import com.ifengxue.todolist.entity.TaskComment.SimpleNClob;
 import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.enums.TaskState;
+import com.ifengxue.todolist.repository.TaskCommentRepository;
 import com.ifengxue.todolist.repository.TaskRepository;
 import com.ifengxue.todolist.service.transaction.TaskTransaction;
 import com.ifengxue.todolist.util.ProjectUtil;
 import com.ifengxue.todolist.web.request.NewTaskRequest;
 import com.ifengxue.todolist.web.request.RenameTaskRequest;
 import com.ifengxue.todolist.web.response.TaskResponse;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -31,6 +37,8 @@ public class TaskService {
   private ProjectService projectService;
   @Autowired
   private TaskTransaction taskTransaction;
+  @Autowired
+  private TaskCommentRepository commentRepository;
 
   public TaskResponse save(Long userId, Long projectId, Long parentId, NewTaskRequest request) {
     Project project = projectService.findProject(projectId, userId);
@@ -178,6 +186,39 @@ public class TaskService {
     }
     taskTransaction.save(project, task, parentTask);
     LOGGER.info("用户 {} 删除任务 {} 成功", userId, taskId);
+  }
+
+  /**
+   * 获取注释
+   */
+  public InputStream findComment(Long userId, Long projectId, Long parentId, Long taskId) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    TaskComment taskComment = commentRepository.findByTaskId(task.getId());
+    if (taskComment == null) {
+      return new ByteInputStream();
+    } else {
+      try {
+        return taskComment.getContent().getAsciiStream();
+      } catch (SQLException e) {
+        throw new ApiException(GatewayError.INTERNAL_ERROR, e);
+      }
+    }
+  }
+
+  /**
+   * 修改备注信息
+   */
+  public void modifyComment(Long userId, Long projectId, Long parentId, Long taskId,
+      InputStream stream, long contentLength) {
+    Task task = findTask(userId, projectId, parentId, taskId);
+    TaskComment taskComment = Optional.ofNullable(commentRepository.findByTaskId(task.getId()))
+        .map(tc -> {
+          tc.setContent(new SimpleNClob(stream, contentLength));
+          return tc;
+        })
+        .orElseGet(() -> TaskComment.from(task.getId(), stream, contentLength));
+    commentRepository.save(taskComment);
+    LOGGER.info("用户 {} 修改任务 {} 备注成功", userId, taskId);
   }
 
   public Task findTask(Long userId, Long projectId, Long parentId, Long taskId) {

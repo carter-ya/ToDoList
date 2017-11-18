@@ -1,6 +1,8 @@
 package com.ifengxue.todolist.web.controller;
 
+import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.base.rest.ApiResponse;
+import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.service.TaskService;
 import com.ifengxue.todolist.web.context.GatewayContext;
 import com.ifengxue.todolist.web.request.NewTaskRequest;
@@ -8,10 +10,16 @@ import com.ifengxue.todolist.web.request.RenameTaskRequest;
 import com.ifengxue.todolist.web.response.TaskResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -110,7 +118,7 @@ public class TaskController {
   }
 
   @PostMapping("/{parentId:\\d{1,19}}/task/{taskId:\\d{1,19}}/finish")
-  @ApiOperation("开始任务")
+  @ApiOperation("完成任务")
   public ApiResponse<Void> finishTask(@PathVariable("projectId") Long projectId,
       @PathVariable("parentId") Long parentId, @PathVariable("taskId") Long taskId) {
     taskService.finishTask(GatewayContext.getCurrentUserId(), projectId, parentId, taskId);
@@ -122,5 +130,49 @@ public class TaskController {
   public ApiResponse<List<TaskResponse>> findTasks(@PathVariable("projectId") Long projectId,
       @PathVariable("parentId") Long parentId) {
     return ApiResponse.ok(taskService.findByProjectIdAndTaskId(projectId, parentId));
+  }
+
+  @GetMapping("/{parentId:\\d{1,19}}/task/{taskId:\\d{1,19}}/comment")
+  @ApiOperation("获取备注信息")
+  public void findComment(@PathVariable("projectId") Long projectId,
+      @PathVariable("parentId") Long parentId, @PathVariable("taskId") Long taskId,
+      HttpServletResponse response) {
+    response.setHeader("Content-Type", MediaType.TEXT_PLAIN_VALUE);
+    byte[] buf = new byte[1024 * 8];
+    int len;
+    InputStream input = null;
+    try {
+      input = taskService
+          .findComment(GatewayContext.getCurrentUserId(), projectId, parentId, taskId);
+      ServletOutputStream outStream = response.getOutputStream();
+      while ((len = input.read(buf)) != -1) {
+        outStream.write(buf, 0, len);
+      }
+      outStream.flush();
+    } catch (IOException e) {
+      throw new ApiException(GatewayError.INTERNAL_ERROR, e);
+    } finally {
+      if (input != null) {
+        try {
+          input.close();
+        } catch (IOException e) {
+          // ignore
+        }
+      }
+    }
+  }
+
+  @PostMapping("/{parentId:\\d{1,19}}/task/{taskId:\\d{1,19}}/comment")
+  @ApiOperation("修改备注信息")
+  public ApiResponse<Void> modifyComment(@PathVariable("projectId") Long projectId,
+      @PathVariable("parentId") Long parentId, @PathVariable("taskId") Long taskId,
+      HttpServletRequest request) {
+    try {
+      taskService.modifyComment(GatewayContext.getCurrentUserId(), projectId, parentId, taskId,
+          request.getInputStream(), request.getContentLength());
+    } catch (IOException e) {
+      throw new ApiException(GatewayError.INTERNAL_ERROR, e);
+    }
+    return ApiResponse.ok(null);
   }
 }

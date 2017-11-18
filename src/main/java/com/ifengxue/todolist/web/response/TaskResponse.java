@@ -11,8 +11,6 @@ import lombok.Data;
 @ApiModel("任务信息")
 public class TaskResponse {
 
-  @ApiModelProperty("注释文件")
-  private String commentLocation;
   @ApiModelProperty("创建时间")
   private Long createdAt;
   @ApiModelProperty("任务截止时间")
