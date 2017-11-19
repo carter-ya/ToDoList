@@ -4,16 +4,21 @@ import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.entity.User;
 import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.repository.UserRepository;
+import com.ifengxue.todolist.service.UserTokenService.UserToken;
 import com.ifengxue.todolist.util.ValidatorUtil;
+import com.ifengxue.todolist.web.ApplicationConfig;
+import com.ifengxue.todolist.web.request.LoginRequest;
 import com.ifengxue.todolist.web.request.RegisterUserRequest;
 import com.ifengxue.todolist.web.request.RenameUserRequest;
 import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,19 +31,18 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  @Qualifier("userTokenDaoService")
+  private UserTokenService tokenService;
+  @Autowired
+  private ApplicationConfig config;
 
   /**
    * 注册账户
    */
   public User registerUser(RegisterUserRequest request) {
-    User existUser;
-    boolean isPhone = false;
-    if (ValidatorUtil.isPhone(request.getAccount())) {
-      existUser = userRepository.findByPhone(request.getAccount());
-      isPhone = true;
-    } else {
-      existUser = userRepository.findByEmail(request.getAccount());
-    }
+    AtomicBoolean isPhone = new AtomicBoolean(false);
+    User existUser = findUser(request.getAccount(), isPhone);
     if (existUser != null) {
       throw new ApiException(GatewayError.DUPLICATE_ACCOUNT, request.getAccount());
     }
@@ -46,9 +50,9 @@ public class UserService {
     byte[] buf = new byte[8];
     sr.nextBytes(buf);
     String salt = Hex.encodeHexString(buf);
-    String password = DigestUtils.sha512Hex(request.getPassword() + "&" + salt);
+    String password = passwordHash(request.getPassword(), salt);
     User registerUser;
-    if (isPhone) {
+    if (isPhone.get()) {
       registerUser = User.fromPhone(request.getNickname(), request.getAccount(), password, salt);
     } else {
       registerUser = User.fromEmail(request.getNickname(), request.getAccount(), password, salt);
@@ -57,6 +61,29 @@ public class UserService {
     LOGGER.info("用户 {} 账号 {} 昵称 {} 注册成功", registerUser.getId(), request.getAccount(),
         request.getNickname());
     return registerUser;
+  }
+
+  /**
+   * 用户登录
+   */
+  public String login(LoginRequest request) {
+    User user = findUser(request.getAccount(), new AtomicBoolean());
+    if (user == null) {
+      throw new ApiException(GatewayError.USER_NOT_FOUND);
+    }
+    String password = passwordHash(request.getPassword(), user.getSalt());
+    if (!password.equals(user.getPassword())) {
+      throw new ApiException(GatewayError.INVALID_PASSWORD);
+    }
+    // 删除历史的令牌
+    tokenService.deleteToken(user.getId());
+    // 保存新令牌
+    UserToken token = UserToken.builder().userId(user.getId())
+        .token(DigestUtils.md5Hex(user.getId() + "@" + System.currentTimeMillis()))
+        .expiredAt(config.getToken().getValidPeriod() * 60 * 1000 + System.currentTimeMillis())
+        .build();
+    tokenService.save(token);
+    return token.getToken();
   }
 
   /**
@@ -73,6 +100,28 @@ public class UserService {
 
   public User findUserById(Long userId) {
     return Optional.ofNullable(userRepository.findOne(userId))
-        .orElseThrow(() -> new ApiException(GatewayError.USER_NOT_FOUND, userId));
+        .orElseThrow(() -> new ApiException(GatewayError.USER_NOT_FOUND));
+  }
+
+  /**
+   * 根据账号查找用户，并返回账户类型
+   *
+   * @param isPhone 同样作为返回值返回
+   */
+  private User findUser(String account, AtomicBoolean isPhone) {
+    if (ValidatorUtil.isPhone(account)) {
+      isPhone.set(true);
+      return userRepository.findByPhone(account);
+    } else {
+      isPhone.set(false);
+      return userRepository.findByEmail(account);
+    }
+  }
+
+  /**
+   * 原始密码hash
+   */
+  private String passwordHash(String originalPassword, String salt) {
+    return DigestUtils.sha512Hex(originalPassword + "&" + salt);
   }
 }

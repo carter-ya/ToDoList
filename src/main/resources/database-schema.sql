@@ -16,6 +16,20 @@ CREATE TABLE t_user (
   INDEX idx_email (email) COMMENT '邮箱索引'
 )ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '用户表';
 
+DROP TABLE IF EXISTS t_user_token;
+CREATE TABLE t_user_token (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',
+  version BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '数据版本',
+  user_id BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+  token CHAR(32) NOT NULL COMMENT 'token',
+  expired_at BIGINT NOT NULL COMMENT '过期时间',
+  created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
+  updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (id),
+  UNIQUE INDEX uq_token (token),
+  UNIQUE INDEX uq_user_id (user_id)
+)ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '用户登录令牌';
+
 DROP TABLE IF EXISTS t_project;
 CREATE TABLE t_project (
   id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID',

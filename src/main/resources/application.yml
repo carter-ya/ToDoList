@@ -27,3 +27,6 @@ logging:
     com.ifengxue: INFO
 swagger:
   enabled: false
+todolist:
+  token:
+    validPeriod: 20 # token有效期，单位分钟

@@ -4,6 +4,7 @@ import com.ifengxue.base.rest.ApiResponse;
 import com.ifengxue.todolist.service.UserService;
 import com.ifengxue.todolist.web.annotation.IgnoreAuth;
 import com.ifengxue.todolist.web.context.GatewayContext;
+import com.ifengxue.todolist.web.request.LoginRequest;
 import com.ifengxue.todolist.web.request.RegisterUserRequest;
 import com.ifengxue.todolist.web.request.RenameUserRequest;
 import com.ifengxue.todolist.web.response.UserResponse;
@@ -27,17 +28,24 @@ public class UserController {
   @Autowired
   private UserService userService;
 
-  @GetMapping("/current")
-  @ApiOperation("获取当前用户信息")
-  public ApiResponse<UserResponse> findUserInfo() {
-    return ApiResponse.ok(UserResponse.from(GatewayContext.USER_HOLDER.get()));
-  }
-
   @PostMapping("/register")
   @ApiOperation("用户注册")
   @IgnoreAuth
   public ApiResponse<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
     return ApiResponse.ok(UserResponse.from(userService.registerUser(request)));
+  }
+
+  @PostMapping("/login")
+  @ApiOperation("用户登录")
+  @IgnoreAuth
+  public ApiResponse<String> login(@Valid @RequestBody LoginRequest request) {
+    return ApiResponse.ok(userService.login(request));
+  }
+
+  @GetMapping("/current")
+  @ApiOperation("获取当前用户信息")
+  public ApiResponse<UserResponse> findUserInfo() {
+    return ApiResponse.ok(UserResponse.from(GatewayContext.USER_HOLDER.get()));
   }
 
   @PostMapping("/nickname")
