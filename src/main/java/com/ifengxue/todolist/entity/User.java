@@ -29,4 +29,22 @@ public class User extends AbstractEntity<Long> {
   private String icon = "";
   @Column(nullable = false)
   private Integer state = UserState.VALID.getCode();
+
+  public static User fromPhone(String nickname, String phone, String password, String salt) {
+    User user = new User();
+    user.setNickname(nickname);
+    user.setPhone(phone);
+    user.setPassword(password);
+    user.setSalt(salt);
+    return user;
+  }
+
+  public static User fromEmail(String nickname, String email, String password, String salt) {
+    User user = new User();
+    user.setNickname(nickname);
+    user.setEmail(email);
+    user.setPassword(password);
+    user.setSalt(salt);
+    return user;
+  }
 }

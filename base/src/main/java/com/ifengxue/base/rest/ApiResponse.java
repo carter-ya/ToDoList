@@ -22,6 +22,10 @@ public class ApiResponse<T> {
   @ApiModelProperty("接口返回值")
   private T data;
 
+  public static <T> ApiResponse<T> ok() {
+    return ok(null);
+  }
+
   public static <T> ApiResponse<T> ok(T data) {
     return new ApiResponse<>(STATUS_OK, MESSAGE_SUCCESS, MESSAGE_SUCCESS, data);
   }

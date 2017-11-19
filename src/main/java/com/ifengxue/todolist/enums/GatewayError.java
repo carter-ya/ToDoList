@@ -9,7 +9,10 @@ public enum GatewayError implements Error {
   PROJECT_NOT_FOUND("project not found", "不存在的项目编号: %s(user: %s)"),
   TASK_NOT_FOUND("task not found", "不存在的任务编号: %s(user: %s)"),
   DATA_ERROR("data error", "数据状态错误"),
-  START_TIME_GREATER_END_TIME("start time greater end time", "开始时间晚于截止时间"),;
+  START_TIME_GREATER_END_TIME("start time greater end time", "开始时间晚于截止时间"),
+  INVALID_PHONE("invalid phone", "无效的手机号: %s"),
+  INVALID_EMAIL("invalid email", "无效的邮箱: %s"),
+  DUPLICATE_ACCOUNT("duplicate account", "重复的账号: %s");
   private final String errorCode;
   private final String errorMessage;
 

@@ -12,8 +12,8 @@ CREATE TABLE t_user (
   created_at BIGINT UNSIGNED NOT NULL COMMENT '创建时间',
   updated_at BIGINT UNSIGNED NOT NULL COMMENT '更新时间',
   PRIMARY KEY (id),
-  UNIQUE unique_phone (phone) COMMENT '手机号索引',
-  UNIQUE unique_email (email) COMMENT '邮箱索引'
+  INDEX idx_phone (phone) COMMENT '手机号索引',
+  INDEX idx_email (email) COMMENT '邮箱索引'
 )ENGINE InnoDB DEFAULT CHARSET utf8mb4 COMMENT '用户表';
 
 DROP TABLE IF EXISTS t_project;
