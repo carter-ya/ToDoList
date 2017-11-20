@@ -13,3 +13,8 @@ swagger:
     url: https://www.ifengxue.com
     email: liukefeng2008@hotmail.com
   base-package: com.ifengxue.todolist.web
+  globalOperationParameters[0]:
+    name: Token
+    modelRef: string
+    parameterType: header
+    description: 访问令牌

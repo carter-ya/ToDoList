@@ -68,6 +68,6 @@ public class ProjectService {
 
   public Project findProject(Long projectId, Long userId) {
     return Optional.ofNullable(projectRepository.findByIdAndUserId(projectId, userId))
-        .orElseThrow(() -> new ApiException(GatewayError.PROJECT_NOT_FOUND, projectId, userId));
+        .orElseThrow(() -> new ApiException(GatewayError.PROJECT_NOT_FOUND));
   }
 }

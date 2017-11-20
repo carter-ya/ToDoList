@@ -5,7 +5,12 @@ import static com.ifengxue.todolist.web.request.RegisterUserRequest.NICKNAME_MIN
 import static com.ifengxue.todolist.web.request.RegisterUserRequest.PASSWORD_MAX_LENGTH;
 import static com.ifengxue.todolist.web.request.RegisterUserRequest.PASSWORD_MIN_LENGTH;
 
+import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.base.rest.Error;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public enum ValidationError implements Error {
   INVALID_NAME("invalid name", "无效的名称"),
@@ -21,6 +26,19 @@ public enum ValidationError implements Error {
   ILLEGAL_NICKNAME("illegal nickname", "昵称中包含非法字符");
   private final String code;
   private final String value;
+  private static final Map<String, ValidationError> NAME_KEYED_MAP = new HashMap<>();
+
+  static {
+    try {
+      for (Field field : ValidationError.class.getFields()) {
+        if (field.getType() == ValidationError.class) {
+          NAME_KEYED_MAP.put(field.getName(), (ValidationError) field.get(ValidationError.class));
+        }
+      }
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   ValidationError(String code, String value) {
     this.code = code;
@@ -43,5 +61,10 @@ public enum ValidationError implements Error {
   @Override
   public String getErrorMessage() {
     return getValue();
+  }
+
+  public static ValidationError find(String name) {
+    return Optional.ofNullable(NAME_KEYED_MAP.get(name))
+        .orElseThrow(() -> new ApiException(GatewayError.INTERNAL_ERROR));
   }
 }

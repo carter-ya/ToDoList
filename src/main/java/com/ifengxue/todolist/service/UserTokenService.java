@@ -1,7 +1,9 @@
 package com.ifengxue.todolist.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户令牌服务
@@ -32,8 +34,26 @@ public interface UserTokenService {
    */
   void deleteToken(Long userId);
 
+  /**
+   * 设置令牌过期时间
+   *
+   * @param token 令牌
+   * @param expiredAt 过期时间
+   */
+  void expire(String token, Long expiredAt);
+
+  /**
+   * 设置令牌过期时间
+   *
+   * @param userId 令牌
+   * @param expiredAt 过期时间
+   */
+  void expire(Long userId, Long expiredAt);
+
   @Data
   @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
   class UserToken {
 
     private Long userId;

@@ -223,9 +223,9 @@ public class TaskService {
 
   public Task findTask(Long userId, Long projectId, Long parentId, Long taskId) {
     Task task = Optional.ofNullable(taskRepository.findByIdAndUserId(taskId, userId))
-        .orElseThrow(() -> new ApiException(GatewayError.TASK_NOT_FOUND, taskId, userId));
+        .orElseThrow(() -> new ApiException(GatewayError.TASK_NOT_FOUND));
     if (!task.getParentId().equals(parentId) || !task.getProjectId().equals(projectId)) {
-      throw new ApiException(GatewayError.TASK_NOT_FOUND, taskId, userId);
+      throw new ApiException(GatewayError.TASK_NOT_FOUND);
     }
     return task;
   }
@@ -238,6 +238,6 @@ public class TaskService {
   private Task findByIdAndUserIdAndProjectId(Long taskId, Long userId, Long projectId) {
     return Optional
         .ofNullable(taskRepository.findByIdAndUserIdAndProjectId(taskId, userId, projectId))
-        .orElseThrow(() -> new ApiException(GatewayError.TASK_NOT_FOUND, taskId, userId));
+        .orElseThrow(() -> new ApiException(GatewayError.TASK_NOT_FOUND));
   }
 }

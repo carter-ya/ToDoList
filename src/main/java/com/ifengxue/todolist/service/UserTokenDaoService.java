@@ -39,4 +39,14 @@ public class UserTokenDaoService implements UserTokenService {
   public void deleteToken(Long userId) {
     userTokenRepository.deleteByUserId(userId);
   }
+
+  @Override
+  public void expire(String token, Long expiredAt) {
+    userTokenRepository.updateExpiredAt(token, expiredAt);
+  }
+
+  @Override
+  public void expire(Long userId, Long expiredAt) {
+    userTokenRepository.updateExpiredAt(userId, expiredAt);
+  }
 }
