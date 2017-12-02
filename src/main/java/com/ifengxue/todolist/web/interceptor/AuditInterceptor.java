@@ -1,7 +1,7 @@
 package com.ifengxue.todolist.web.interceptor;
 
-import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.enums.GatewayError;
+import com.ifengxue.todolist.rest.ApiException;
 import com.ifengxue.todolist.service.UserService;
 import com.ifengxue.todolist.service.UserTokenService;
 import com.ifengxue.todolist.service.UserTokenService.UserToken;

@@ -1,6 +1,6 @@
 package com.ifengxue.todolist.web.controller;
 
-import com.ifengxue.base.rest.ApiResponse;
+import com.ifengxue.todolist.rest.ApiResponse;
 import com.ifengxue.todolist.service.UserService;
 import com.ifengxue.todolist.web.annotation.IgnoreAuth;
 import com.ifengxue.todolist.web.context.GatewayContext;

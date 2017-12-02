@@ -1,7 +1,7 @@
 package com.ifengxue.todolist.util;
 
-import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.enums.GatewayError;
+import com.ifengxue.todolist.rest.ApiException;
 import java.util.Set;
 import java.util.regex.Pattern;
 import javax.validation.ConstraintViolation;

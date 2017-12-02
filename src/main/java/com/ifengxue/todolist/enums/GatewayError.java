@@ -1,8 +1,7 @@
 package com.ifengxue.todolist.enums;
 
-import com.ifengxue.base.rest.Error;
 
-public enum GatewayError implements Error {
+public enum GatewayError implements com.ifengxue.todolist.rest.Error {
   BAD_ARGUMENT("bad argument", "错误的参数: %s"),
   INTERNAL_ERROR("internal error", "系统内部错误"),
   USER_NOT_FOUND("user not found", "不存在的用户"),

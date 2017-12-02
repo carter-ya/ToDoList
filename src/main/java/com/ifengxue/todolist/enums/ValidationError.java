@@ -5,8 +5,8 @@ import static com.ifengxue.todolist.web.request.RegisterUserRequest.NICKNAME_MIN
 import static com.ifengxue.todolist.web.request.RegisterUserRequest.PASSWORD_MAX_LENGTH;
 import static com.ifengxue.todolist.web.request.RegisterUserRequest.PASSWORD_MIN_LENGTH;
 
-import com.ifengxue.base.rest.ApiException;
-import com.ifengxue.base.rest.Error;
+import com.ifengxue.todolist.rest.ApiException;
+import com.ifengxue.todolist.rest.Error;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;

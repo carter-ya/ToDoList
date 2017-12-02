@@ -2,11 +2,11 @@ package com.ifengxue.todolist.service;
 
 import static java.util.stream.Collectors.toList;
 
-import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.entity.Project;
 import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.enums.ProjectState;
 import com.ifengxue.todolist.repository.ProjectRepository;
+import com.ifengxue.todolist.rest.ApiException;
 import com.ifengxue.todolist.web.request.NewProjectRequest;
 import com.ifengxue.todolist.web.request.RenameProjectRequest;
 import com.ifengxue.todolist.web.response.ProjectResponse;

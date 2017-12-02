@@ -2,7 +2,6 @@ package com.ifengxue.todolist.service;
 
 import static java.util.stream.Collectors.toList;
 
-import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.entity.Project;
 import com.ifengxue.todolist.entity.Task;
 import com.ifengxue.todolist.entity.TaskComment;
@@ -11,6 +10,7 @@ import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.enums.TaskState;
 import com.ifengxue.todolist.repository.TaskCommentRepository;
 import com.ifengxue.todolist.repository.TaskRepository;
+import com.ifengxue.todolist.rest.ApiException;
 import com.ifengxue.todolist.service.transaction.TaskTransaction;
 import com.ifengxue.todolist.util.ProjectUtil;
 import com.ifengxue.todolist.web.request.NewTaskRequest;

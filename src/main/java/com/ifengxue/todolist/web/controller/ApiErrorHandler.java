@@ -1,9 +1,9 @@
 package com.ifengxue.todolist.web.controller;
 
-import com.ifengxue.base.rest.ApiException;
-import com.ifengxue.base.rest.ApiResponse;
 import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.enums.ValidationError;
+import com.ifengxue.todolist.rest.ApiException;
+import com.ifengxue.todolist.rest.ApiResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;

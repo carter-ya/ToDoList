@@ -1,6 +1,6 @@
 package com.ifengxue.todolist.enums;
 
-import com.ifengxue.base.rest.ApiException;
+import com.ifengxue.todolist.rest.ApiException;
 import java.util.Arrays;
 
 public enum UserState {

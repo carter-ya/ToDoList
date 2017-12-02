@@ -1,9 +1,9 @@
 package com.ifengxue.todolist.service;
 
-import com.ifengxue.base.rest.ApiException;
 import com.ifengxue.todolist.entity.User;
 import com.ifengxue.todolist.enums.GatewayError;
 import com.ifengxue.todolist.repository.UserRepository;
+import com.ifengxue.todolist.rest.ApiException;
 import com.ifengxue.todolist.service.UserTokenService.UserToken;
 import com.ifengxue.todolist.util.ValidatorUtil;
 import com.ifengxue.todolist.web.ApplicationConfig;
