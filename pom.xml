@@ -11,9 +11,9 @@
 	<description>ToDoList</description>
 
 	<parent>
-    <groupId>com.ifengxue</groupId>
-    <artifactId>base</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.8.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -24,6 +24,26 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- swagger-ui -->
+		<dependency>
+			<groupId>com.spring4all</groupId>
+			<artifactId>spring-boot-starter-swagger</artifactId>
+			<version>1.5.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
@@ -42,11 +62,6 @@
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.11</version>
-    </dependency>
-    <dependency>
-      <groupId>com.ifengxue</groupId>
-      <artifactId>base</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <!-- 配置数据库依赖 -->
     <dependency>

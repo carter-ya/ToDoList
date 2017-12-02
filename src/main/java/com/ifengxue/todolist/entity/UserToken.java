@@ -1,6 +1,5 @@
 package com.ifengxue.todolist.entity;
 
-import com.ifengxue.base.entity.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;

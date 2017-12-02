@@ -1,6 +1,5 @@
 package com.ifengxue.todolist.entity;
 
-import com.ifengxue.base.entity.AbstractEntity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

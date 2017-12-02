@@ -1,4 +1,4 @@
-package com.ifengxue.base.entity;
+package com.ifengxue.todolist.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;

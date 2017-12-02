@@ -1,6 +1,5 @@
 package com.ifengxue.todolist.entity;
 
-import com.ifengxue.base.entity.AbstractEntity;
 import com.ifengxue.todolist.enums.TaskState;
 import com.ifengxue.todolist.web.request.NewTaskRequest;
 import javax.persistence.Column;

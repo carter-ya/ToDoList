@@ -1,4 +1,4 @@
-package com.ifengxue.base.rest;
+package com.ifengxue.todolist.rest;
 
 public interface Error {
 
