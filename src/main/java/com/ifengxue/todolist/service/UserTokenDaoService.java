@@ -2,6 +2,7 @@ package com.ifengxue.todolist.service;
 
 import com.ifengxue.todolist.repository.UserTokenRepository;
 import com.ifengxue.todolist.util.BeanUtil;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class UserTokenDaoService implements UserTokenService {
 
   @Override
   public UserToken findByToken(String token) {
-    return BeanUtil.copyProperties(userTokenRepository.findByToken(token), UserToken.class);
+    return Optional.ofNullable(userTokenRepository.findByToken(token))
+        .map(ut -> BeanUtil.copyProperties(ut, UserToken.class)).orElse(null);
   }
 
   @Override
